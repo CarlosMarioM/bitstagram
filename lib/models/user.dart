@@ -1,14 +1,16 @@
 class User {
-  final String id;
-  final String nickname;
+  String? id;
+  String? nickname;
   final String email;
   final String password;
+  DateTime? createdAt;
 
   User({
-    required this.id,
-    required this.nickname,
+    this.id,
+    this.nickname,
     required this.email,
     required this.password,
+    this.createdAt,
   });
 
   factory User.fromMap(Map<String, dynamic> map) {
@@ -17,6 +19,7 @@ class User {
       nickname: map['nickname'],
       email: map['email'],
       password: map['password'],
+      createdAt: DateTime.fromMicrosecondsSinceEpoch(map['created_At']),
     );
   }
 
@@ -26,6 +29,7 @@ class User {
       'nickname': nickname,
       'email': email,
       'password': password,
+      'created_At': createdAt
     };
   }
 }
