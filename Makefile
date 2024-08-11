@@ -6,6 +6,21 @@ GITHUB_USER = carlosmariom
 GITHUB_REPO = https://github.com/$(GITHUB_USER)/$(OUTPUT)
 BUILD_VERSION := $(shell grep 'version:' pubspec.yaml | awk '{print $$2}')
 
+on:
+     push:
+       branches: [ master ]
+     pull_request:
+       branches: [ master ]
+
+   jobs:
+    build:
+      runs-on: ubuntu-latest
+      steps:
+      - name: checkout repo
+        uses: actions/checkout@main
+      - name: build application
+        run: make deploy OUTPUT=bitstagram
+
 # Deploy the Flutter web project to GitHub
 deploy:
 ifndef OUTPUT
