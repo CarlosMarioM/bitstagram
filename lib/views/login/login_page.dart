@@ -1,5 +1,6 @@
 import 'package:bitstagram/provider/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:pixelarticons/pixel.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/user.dart';
@@ -47,12 +48,19 @@ class _LoginPageState extends State<LoginPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 42),
-              const Text("Hello there, let´s bit together!"),
+              const Flexible(
+                child: Text(
+                  "Hello there, let´s bit together!",
+                  maxLines: 1,
+                  softWrap: true,
+                  overflow: TextOverflow.clip,
+                ),
+              ),
               const Spacer(),
               const SizedBox(height: 24),
               Center(
                 child: SizedBox(
-                  width: 500,
+                  width: 480,
                   child: TextFormField(
                     controller: emailController,
                     validator: validateEmail,
@@ -68,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 24),
               Center(
                 child: SizedBox(
-                  width: 500,
+                  width: 480,
                   child: TextFormField(
                     controller: passwordController,
                     obscureText: !showPassword,
@@ -91,8 +99,8 @@ class _LoginPageState extends State<LoginPage> {
                           onPressed: () =>
                               setState(() => showPassword = !showPassword),
                           icon: showPassword
-                              ? const Icon(Icons.password)
-                              : const Icon(Icons.remove_red_eye_outlined)),
+                              ? const Icon(Pixel.eyeclosed)
+                              : const Icon(Pixel.eye)),
                     ),
                   ),
                 ),
@@ -101,9 +109,9 @@ class _LoginPageState extends State<LoginPage> {
               const Spacer(),
               Center(
                 child: SizedBox(
-                  width: 500,
+                  width: 480,
                   height: 55,
-                  child: ElevatedButton(
+                  child: OutlinedButton(
                     onPressed: () async {
                       if (formKey.currentState!.validate()) {
                         await userProvider.login(
@@ -141,7 +149,7 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 24),
               Center(
                 child: SizedBox(
-                  width: 500,
+                  width: 320,
                   height: 55,
                   child: TextButton(
                     onPressed: () async {
@@ -174,7 +182,9 @@ class _LoginPageState extends State<LoginPage> {
                     },
                     child: const Text(
                       "Or create an account",
-                      style: TextStyle(color: Colors.white),
+                      maxLines: 1,
+                      overflow: TextOverflow.clip,
+                      style: TextStyle(color: Colors.white, fontSize: 10),
                     ),
                   ),
                 ),

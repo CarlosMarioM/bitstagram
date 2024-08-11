@@ -89,7 +89,20 @@ ThemeData createRetroBlackTheme() {
         ),
       ),
     ),
-
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        elevation: 4,
+        shape: const BeveledRectangleBorder(),
+        backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+        side: const BorderSide(
+            color: Colors.white,
+            width: 4,
+            style: BorderStyle.solid,
+            strokeAlign: 2),
+        enableFeedback: true,
+        foregroundColor: const Color.fromARGB(255, 255, 255, 255),
+      ),
+    ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color(0xFF404040),
@@ -102,7 +115,6 @@ ThemeData createRetroBlackTheme() {
         ),
       ),
     ),
-
     cardTheme: CardTheme(
       elevation: 7,
       color: const Color(0xFF121212),
