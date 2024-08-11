@@ -1,5 +1,6 @@
 import 'package:bitstagram/provider/user_provider.dart';
 import 'package:bitstagram/views/home/home_page.dart';
+import 'package:bitstagram/views/share/share_page.dart';
 import 'package:bitstagram/widgets/appbart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,9 +23,7 @@ class _BottomBarPageState extends State<BottomBarPage> {
     List<Widget> widgets = [
       const HomePage(),
       const ExplorePage(),
-      Text(
-        'Index 2: SHARE',
-      ),
+      const SharePage(),
       TextButton(
         onPressed: () async => await userProvider.signOut(),
         child: Text("SignOut", style: TextStyle(color: Colors.white)),
@@ -66,37 +65,47 @@ class _BottomBarPageState extends State<BottomBarPage> {
         unselectedLabelStyle: const TextStyle(color: Colors.white54),
         showUnselectedLabels: false,
         showSelectedLabels: false,
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home_outlined,
-              color: Colors.white,
+            icon: Image.network(
+              "assets/icons/home_icon.png",
+              cacheHeight: 10,
+              cacheWidth: 10,
+              height: 30,
             ),
             label: "HOME",
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.explore,
-              color: Colors.white,
+            icon: Image.network(
+              "assets/icons/tree_icon.png",
+              cacheHeight: 10,
+              cacheWidth: 10,
+              height: 30,
             ),
             label: "EXPLORE",
           ),
           BottomNavigationBarItem(
-              icon: Icon(
-                Icons.add,
-                color: Colors.white,
+              icon: Image.network(
+                "assets/icons/tree_icon.png",
+                cacheHeight: 10,
+                cacheWidth: 10,
+                height: 30,
               ),
               label: "SHARE"),
           BottomNavigationBarItem(
-              icon: Icon(
-                Icons.person_2_outlined,
-                color: Colors.white,
+              icon: Image.network(
+                "assets/icons/tree_icon.png",
+                cacheHeight: 10,
+                cacheWidth: 10,
+                height: 30,
               ),
               label: "ACCOUNT"),
           BottomNavigationBarItem(
-              icon: Icon(
-                Icons.settings,
-                color: Colors.white,
+              icon: Image.network(
+                "assets/icons/tree_icon.png",
+                cacheHeight: 10,
+                cacheWidth: 10,
+                height: 30,
               ),
               label: "SETTINGS")
         ],

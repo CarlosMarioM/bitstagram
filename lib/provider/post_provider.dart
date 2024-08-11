@@ -33,14 +33,9 @@ class PostProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> dislike(String postId) async {
-    await _postRepository.dislike(postId);
-    await likeByMe(postId);
-  }
-
-  Future<void> likePost(String userId, String postId) async {
+  Future<void> likePost(String postId) async {
     try {
-      await _postRepository.likePost(userId, postId);
+      await _postRepository.likePost(postId);
       await addLikeCounter(postId);
       await getLikesPerPost(postId);
       await likeByMe(postId);
@@ -49,9 +44,22 @@ class PostProvider with ChangeNotifier {
     }
   }
 
+  Future<void> dislikePost(String postId) async {
+    await _postRepository.dislikePost(postId);
+    await deleteLikeCounter(postId);
+    await getLikesPerPost(postId);
+    await likeByMe(postId);
+  }
+
   Future<void> addLikeCounter(String postId) async {
     try {
       await _postRepository.addLikeCounter(postId);
+    } catch (e) {}
+  }
+
+  Future<void> deleteLikeCounter(String postId) async {
+    try {
+      await _postRepository.deleteLikeCounter(postId);
     } catch (e) {}
   }
 

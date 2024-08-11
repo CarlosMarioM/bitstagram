@@ -69,7 +69,7 @@ class PostRepository with MySupaBase {
     }
   }
 
-  Future<void> dislike(String postId) async {
+  Future<void> dislikePost(String postId) async {
     await client
         .from('likes')
         .delete()
@@ -77,15 +77,32 @@ class PostRepository with MySupaBase {
         .eq("post_id", postId);
   }
 
-  Future<void> likePost(String userId, String postId) async {
+  Future<void> likePost(String postId) async {
     try {
       await client.from('likes').insert({
-        'user_id': userId,
+        'user_id': supaAuth.currentUser.id!,
         'post_id': postId,
       });
     } catch (e) {
       print(e);
       rethrow;
+    }
+  }
+
+  Future<void> deleteLikeCounter(String postId) async {
+    try {
+      final postMap =
+          await client.from('posts').select().eq('id', postId).single();
+      final post = Post.fromMap(postMap);
+      int likesDecreased = post.likesCount - 1;
+      if (likesDecreased < 0) {
+        likesDecreased = 0;
+      }
+      await client
+          .from('posts')
+          .update({'likes_count': likesDecreased}).eq('id', postId);
+    } catch (e) {
+      print(e);
     }
   }
 
