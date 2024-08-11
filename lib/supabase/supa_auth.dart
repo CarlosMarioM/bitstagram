@@ -33,6 +33,25 @@ class SupaAuth extends MySupaBase {
       email: email,
       password: password,
     );
-    return response;
+    try {
+      final map = await supaAuth.client
+          .from('users')
+          .select()
+          .eq("email", email)
+          .eq("password", password)
+          .single();
+
+      print(map);
+      final user = User.fromMap(map);
+      currentUser = User(
+          id: user.id,
+          email: response.user!.email!,
+          password: password,
+          createdAt: DateTime.parse(response.user!.createdAt));
+      return response;
+    } catch (e) {
+      print(e);
+      return supa.AuthResponse(session: null, user: null);
+    }
   }
 }

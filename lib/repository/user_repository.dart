@@ -9,15 +9,10 @@ class UserRepository {
       {required User user, required Function(String) errorCallback}) async {
     try {
       await supaAuth.signup(user.email, user.password);
-      await supaAuth.client
-          .from('users')
-          .insert({"email": user.email, "password": user.password});
-
       final userMap = await supaAuth.client
-          .from("users")
+          .from('users')
+          .insert({"email": user.email, "password": user.password})
           .select()
-          .eq("email", user.email)
-          .eq("password", user.password)
           .single();
 
       return User.fromMap(userMap);
@@ -26,6 +21,7 @@ class UserRepository {
     } on supa.AuthApiException catch (e) {
       errorCallback(e.message);
     }
+    return null;
   }
 
   Future<void> signOut() async {

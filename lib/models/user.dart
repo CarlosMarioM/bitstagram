@@ -19,7 +19,7 @@ class User {
       nickname: map['nickname'],
       email: map['email'],
       password: map['password'],
-      createdAt: DateTime.fromMicrosecondsSinceEpoch(map['created_At']),
+      createdAt: DateTime.parse(map['created_at']),
     );
   }
 

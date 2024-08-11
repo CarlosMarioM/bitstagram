@@ -3,15 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/user.dart';
 import '../repository/user_repository.dart';
 
-class PostProvider with ChangeNotifier {
-  bool _like = false;
-  bool get like => _like;
-  void likePressed() {
-    _like = !_like;
-    notifyListeners();
-  }
-}
-
+ 
 class UserProvider with ChangeNotifier {
   final UserRepository _userRepository = UserRepository();
   User? _user;
