@@ -1,25 +1,32 @@
 import 'dart:math';
 
 import 'package:bitstagram/provider/user_provider.dart';
+import 'package:bitstagram/supabase/supa_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../models/post.dart';
+import '../provider/post_provider.dart';
 import '../views/explore/explore_page.dart';
 
 const filledHeartURL = "assets/icons/filled_heart.png";
 const emptuyHeartURL = "assets/icons/empty_heart.png";
 
 class BitPostComplete extends StatefulWidget {
-  const BitPostComplete({super.key});
-
+  const BitPostComplete({super.key, required this.post});
+  final Post post;
   @override
   State<BitPostComplete> createState() => _BitPostCompleteState();
 }
 
 class _BitPostCompleteState extends State<BitPostComplete> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final postProvider = Provider.of<PostProvider>(context);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Center(
@@ -51,7 +58,7 @@ class _BitPostCompleteState extends State<BitPostComplete> {
                 Expanded(
                   flex: 3,
                   child: Image.network(
-                    networkImages[Random().nextInt(networkImages.length - 1)],
+                    widget.post.mediaUrl,
                     cacheHeight: 650,
                     cacheWidth: 650,
                     fit: BoxFit.fitWidth,
@@ -70,7 +77,7 @@ class _BitPostCompleteState extends State<BitPostComplete> {
                         SizedBox(
                           width: 380,
                           child: Text(
-                            "La verdad es un dicho que se dice a pulmon, se menciona en corazon y se muestra compasion. ",
+                            widget.post.content,
                             style: Theme.of(context).textTheme.labelMedium,
                             textAlign: TextAlign.justify,
                             maxLines: 3,
@@ -85,9 +92,18 @@ class _BitPostCompleteState extends State<BitPostComplete> {
                           height: 30,
                           width: 35,
                           child: GestureDetector(
-                              onTap: () => postProvider.likePressed(),
+                              onTap: () => widget.post.likedByMe
+                                  ? Provider.of<PostProvider>(context,
+                                          listen: false)
+                                      .dislike(widget.post.id)
+                                  : Provider.of<PostProvider>(context,
+                                          listen: false)
+                                      .likePost(
+                                      supaAuth.currentUser.id!,
+                                      widget.post.id,
+                                    ),
                               child: Image.network(
-                                postProvider.like
+                                widget.post.likedByMe
                                     ? filledHeartURL
                                     : emptuyHeartURL,
                                 cacheHeight: 30,
