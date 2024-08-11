@@ -1,3 +1,4 @@
+import 'package:bitstagram/provider/post_provider.dart';
 import 'package:bitstagram/provider/user_provider.dart';
 import 'package:bitstagram/views/bottom_bar/bottom_bar_page.dart';
 import 'package:bitstagram/widgets/auth_state_wrapper.dart';
@@ -36,7 +37,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         theme: createRetroBlackTheme(),
-        initialRoute: BottomBarPage.route,
+        initialRoute: AuthStateWrapper.route,
         onGenerateRoute: Navigation.generateRoute,
       ),
     );
