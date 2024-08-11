@@ -15,8 +15,9 @@ class PostProvider with ChangeNotifier {
 
   List<Post> get posts => _posts;
 
-  bool _like = false;
-  bool get like => _like;
+  Future<void> deletePost(String postId) async {
+    await _postRepository.deletePost(postId);
+  }
 
   Future<void> likeByMe(String postId) async {
     final Like? like = await _postRepository.likedByMe(postId);

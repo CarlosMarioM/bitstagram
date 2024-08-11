@@ -43,10 +43,20 @@ class PostRepository with MySupaBase {
   }
 
   Future<void> deletePost(String postId) async {
-    final response = await client.from('posts').delete().eq('id', postId);
+    try {
+      final response = await client
+          .from('posts')
+          .select()
+          .eq('id', postId)
+          .then((value) => Post.fromMap(value.first));
 
-    if (response.error != null) {
-      throw Exception('Failed to delete post: ${response.error!.message}');
+      await client.storage.from("posts").remove([
+        "${supaAuth.currentUser.id!}/${response.createdAt.microsecondsSinceEpoch}"
+      ]);
+
+      await client.from("posts").delete().eq("id", postId);
+    } catch (e) {
+      print(e);
     }
   }
 

@@ -3,6 +3,7 @@ import 'package:bitstagram/views/home/home_page.dart';
 import 'package:bitstagram/views/share/share_page.dart';
 import 'package:bitstagram/widgets/appbart.dart';
 import 'package:flutter/material.dart';
+import 'package:pixelarticons/pixel.dart';
 import 'package:provider/provider.dart';
 
 import '../explore/explore_page.dart';
@@ -64,50 +65,53 @@ class _BottomBarPageState extends State<BottomBarPage> {
         selectedLabelStyle: const TextStyle(color: Colors.white),
         unselectedLabelStyle: const TextStyle(color: Colors.white54),
         showUnselectedLabels: false,
-        showSelectedLabels: false,
-        items: [
+        showSelectedLabels: true,
+        items: const [
           BottomNavigationBarItem(
-            icon: Image.network(
-              "assets/icons/home_icon.png",
-              cacheHeight: 10,
-              cacheWidth: 10,
-              height: 30,
+            icon: Icon(
+              Pixel.home,
+              size: 30,
+              color: Colors.white,
             ),
             label: "HOME",
+            tooltip: "Home",
           ),
           BottomNavigationBarItem(
-            icon: Image.network(
-              "assets/icons/tree_icon.png",
-              cacheHeight: 10,
-              cacheWidth: 10,
-              height: 30,
+            icon: Icon(
+              Pixel.search,
+              size: 30,
+              color: Colors.white,
             ),
             label: "EXPLORE",
+            tooltip: "Explore",
           ),
           BottomNavigationBarItem(
-              icon: Image.network(
-                "assets/icons/tree_icon.png",
-                cacheHeight: 10,
-                cacheWidth: 10,
-                height: 30,
-              ),
-              label: "SHARE"),
+            icon: Icon(
+              Pixel.imagenew,
+              size: 30,
+              color: Colors.white,
+            ),
+            label: "SHARE",
+            tooltip: "Share",
+          ),
           BottomNavigationBarItem(
-              icon: Image.network(
-                "assets/icons/tree_icon.png",
-                cacheHeight: 10,
-                cacheWidth: 10,
-                height: 30,
-              ),
-              label: "ACCOUNT"),
+            icon: Icon(
+              Pixel.shuffle,
+              size: 30,
+              color: Colors.white,
+            ),
+            label: "WATCH",
+            tooltip: "Watch",
+          ),
           BottomNavigationBarItem(
-              icon: Image.network(
-                "assets/icons/tree_icon.png",
-                cacheHeight: 10,
-                cacheWidth: 10,
-                height: 30,
-              ),
-              label: "SETTINGS")
+            icon: Icon(
+              Pixel.humanhandsup,
+              size: 30,
+              color: Colors.white,
+            ),
+            label: "ACCOUNT",
+            tooltip: "Account",
+          ),
         ],
       ),
     );
