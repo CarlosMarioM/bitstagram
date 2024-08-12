@@ -2,7 +2,6 @@ import 'package:bitstagram/provider/feed_provider.dart';
 import 'package:bitstagram/widgets/bit_circle_avatar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pixelarticons/pixel.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
@@ -134,21 +133,21 @@ class _FeedVideosState extends State<FeedVideos> {
                         ),
                         IconButton(
                             onPressed: () {},
-                            icon: const Icon(Pixel.alert,
+                            icon: const Icon(Icons.play_arrow,
                                 size: 35.0, color: Colors.white)),
                         const SizedBox(
                           height: 10.0,
                         ),
                         IconButton(
                             onPressed: () {},
-                            icon: const Icon(Pixel.alert,
+                            icon: const Icon(Icons.share,
                                 size: 30.0, color: Colors.white)),
                         const SizedBox(
                           height: 10.0,
                         ),
                         IconButton(
                             onPressed: () {},
-                            icon: const Icon(Pixel.alert,
+                            icon: const Icon(Icons.heart_broken_outlined,
                                 size: 30.0, color: Colors.white))
                       ],
                     ))
@@ -173,7 +172,7 @@ class FeedErrorWidget extends StatelessWidget {
         SizedBox(
           height: 140.0,
           width: 140.0,
-          child: Icon(Pixel.warningbox),
+          child: Icon(Icons.warning),
         ),
         SizedBox(
           height: 25.0,

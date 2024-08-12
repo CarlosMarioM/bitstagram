@@ -1,6 +1,5 @@
 import 'package:bitstagram/provider/user_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:pixelarticons/pixel.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/user.dart';
@@ -51,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
               const Flexible(
                 child: Text(
                   "Hello there, let´s bit together!",
-                  maxLines: 1,
+                  maxLines: 2,
                   softWrap: true,
                   overflow: TextOverflow.clip,
                 ),
@@ -99,8 +98,8 @@ class _LoginPageState extends State<LoginPage> {
                           onPressed: () =>
                               setState(() => showPassword = !showPassword),
                           icon: showPassword
-                              ? const Icon(Pixel.eyeclosed)
-                              : const Icon(Pixel.eye)),
+                              ? const Icon(Icons.lock_open_outlined)
+                              : const Icon(Icons.lock_outline)),
                     ),
                   ),
                 ),

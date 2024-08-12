@@ -4,7 +4,7 @@ import 'package:bitstagram/views/splash/loading_splash_page.dart';
 import 'package:bitstagram/views/watch/watch_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:pixelarticons/pixel.dart';
+
 import 'package:provider/provider.dart';
 
 import '../../models/user.dart';
@@ -48,7 +48,7 @@ class _AccountPageState extends State<AccountPage>
                     IconButton(
                       onPressed: () {},
                       icon: const Icon(
-                        Pixel.user,
+                        Icons.photo_camera_front_outlined,
                         color: Colors.white,
                       ),
                     )

@@ -5,7 +5,7 @@ import 'package:bitstagram/supabase/supa_auth.dart';
 import 'package:bitstagram/widgets/bit_circle_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:pixelarticons/pixel.dart';
+
 import 'package:provider/provider.dart';
 
 import '../models/post.dart';
@@ -81,16 +81,7 @@ class _UserHeadlineWidget extends StatelessWidget {
           style: Theme.of(context).textTheme.labelMedium,
         ),
         const Spacer(),
-        PopupMenuButton(
-            tooltip: "Options",
-            itemBuilder: (context) {
-              return [
-                PopupMenuItem(
-                  child: Center(child: DeletePostButton(postId: postId)),
-                )
-              ];
-            },
-            child: const Icon(Pixel.menu)),
+        
         const SizedBox(width: 16),
       ],
     );
@@ -226,7 +217,7 @@ class _LikeInteractionWidget extends StatelessWidget {
                   : Provider.of<PostProvider>(context, listen: false)
                       .likePost(post.id),
               child: Icon(
-                Pixel.heart,
+                post.likedByMe ? Icons.favorite : Icons.heart_broken_outlined,
                 color: post.likedByMe ? Colors.red : Colors.white,
                 fill: post.likedByMe ? 1 : 0,
               )

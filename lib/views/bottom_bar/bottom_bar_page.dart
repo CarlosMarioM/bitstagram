@@ -5,7 +5,6 @@ import 'package:bitstagram/views/share/share_page.dart';
 import 'package:bitstagram/views/watch/watch_page.dart';
 import 'package:bitstagram/widgets/appbart.dart';
 import 'package:flutter/material.dart';
-import 'package:pixelarticons/pixel.dart';
 import 'package:provider/provider.dart';
 
 import '../explore/explore_page.dart';
@@ -66,7 +65,7 @@ class _BottomBarPageState extends State<BottomBarPage> {
         items: const [
           BottomNavigationBarItem(
             icon: Icon(
-              Pixel.home,
+              Icons.home,
               size: 30,
               color: Colors.white,
             ),
@@ -75,7 +74,7 @@ class _BottomBarPageState extends State<BottomBarPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Pixel.search,
+              Icons.search,
               size: 30,
               color: Colors.white,
             ),
@@ -84,7 +83,7 @@ class _BottomBarPageState extends State<BottomBarPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Pixel.imagenew,
+              Icons.add_circle_outline_sharp,
               size: 30,
               color: Colors.white,
             ),
@@ -93,7 +92,7 @@ class _BottomBarPageState extends State<BottomBarPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Pixel.shuffle,
+              Icons.shuffle,
               size: 30,
               color: Colors.white,
             ),
@@ -102,7 +101,7 @@ class _BottomBarPageState extends State<BottomBarPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Pixel.humanhandsup,
+              Icons.run_circle_outlined,
               size: 30,
               color: Colors.white,
             ),
