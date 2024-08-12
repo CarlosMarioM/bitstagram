@@ -1,3 +1,4 @@
+import 'package:bitstagram/models/explore/photos_response_model.dart';
 import 'package:bitstagram/models/feed/feed_response.dart';
 import 'package:bitstagram/repository/pexels_repository.dart';
 import 'package:flutter/material.dart';
