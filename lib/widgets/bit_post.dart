@@ -9,6 +9,7 @@ import 'package:pixelarticons/pixel.dart';
 import 'package:provider/provider.dart';
 
 import '../models/post.dart';
+import '../models/user.dart';
 import '../provider/post_provider.dart';
 import '../views/explore/explore_page.dart';
 
@@ -16,38 +17,55 @@ const filledHeartURL = "assets/icons/filled_heart.png";
 const emptyHeartURL = "assets/icons/empty_heart_white.png";
 
 class BitPostComplete extends StatelessWidget {
-  const BitPostComplete({super.key, required this.post});
+  const BitPostComplete({
+    super.key,
+    required this.post,
+  });
   final Post post;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Center(
-        child: SizedBox(
-          height: 700,
-          width: 600,
-          child: Card(
-            margin: const EdgeInsets.all(0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _UserHeadlineWidget(postId: post.id),
-                BitPostImage(post: post),
-                _ContentWidget(post: post),
-              ],
+    return FutureBuilder(
+      future: Provider.of<UserProvider>(context, listen: false)
+          .fetchUserById(post.userId),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(
+              child: SizedBox(
+                height: 700,
+                width: 600,
+                child: Card(
+                  margin: const EdgeInsets.all(0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _UserHeadlineWidget(
+                        postId: post.id,
+                        user: snapshot.data!,
+                      ),
+                      BitPostImage(post: post),
+                      _ContentWidget(post: post),
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
+          );
+        } else {
+          return const SizedBox();
+        }
+      },
     );
   }
 }
 
 class _UserHeadlineWidget extends StatelessWidget {
-  const _UserHeadlineWidget({required this.postId});
+  const _UserHeadlineWidget({required this.postId, required this.user});
   final String postId;
+  final User user;
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -55,11 +73,11 @@ class _UserHeadlineWidget extends StatelessWidget {
         BitCircleAvatar(
           height: 50,
           width: 50,
-          image: supaAuth.currentUser.photoUrl,
+          image: user.photoUrl,
         ),
         const SizedBox(width: 8),
         Text(
-          supaAuth.currentUser.nickname ?? "User",
+          user.nickname ?? "User",
           style: Theme.of(context).textTheme.labelMedium,
         ),
         const Spacer(),

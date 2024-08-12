@@ -36,9 +36,15 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> fetchUserById(String id) async {
+  Future<User> fetchUserById(String id) async {
     _user = await _userRepository.getUserById(id);
+
     notifyListeners();
+    if (_user == null) {
+      return User.empty;
+    } else {
+      return _user!;
+    }
   }
 
   Future<void> updateUserInfo({
