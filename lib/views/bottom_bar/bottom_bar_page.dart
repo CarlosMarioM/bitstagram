@@ -1,4 +1,5 @@
 import 'package:bitstagram/provider/user_provider.dart';
+import 'package:bitstagram/views/account/account_page.dart';
 import 'package:bitstagram/views/home/home_page.dart';
 import 'package:bitstagram/views/share/share_page.dart';
 import 'package:bitstagram/views/watch/watch_page.dart';
@@ -27,10 +28,7 @@ class _BottomBarPageState extends State<BottomBarPage> {
       const ExplorePage(),
       const SharePage(),
       const WatchPage(),
-      TextButton(
-        onPressed: () async => await userProvider.signOut(),
-        child: const Text("SignOut", style: TextStyle(color: Colors.white)),
-      )
+      AccountPage()
     ];
     return Scaffold(
       resizeToAvoidBottomInset: true,

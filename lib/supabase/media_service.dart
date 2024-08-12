@@ -17,7 +17,7 @@ class MediaService {
       );
       if (pickedFile != null) {
         final storagePath =
-            "posts/${supaAuth.currentUser.id}/${DateTime.now().millisecondsSinceEpoch}";
+            "${supaAuth.currentUser.id}/${DateTime.now().millisecondsSinceEpoch}";
 
         return (storagePath, pickedFile);
       }
@@ -31,7 +31,7 @@ class MediaService {
     return pickedFile != null ? File(pickedFile.path) : null;
   }
 
-  Future<String> uploadMedia(String storagePath, XFile file) async {
+  Future<String> uploadMediaPost(String storagePath, XFile file) async {
     try {
       final imageBytes = await file.readAsBytes();
 
@@ -44,9 +44,31 @@ class MediaService {
             ),
           );
 
-      // Get the public URL for the uploaded file
       final publicUrl =
           supabase.storage.from('posts').getPublicUrl(storagePath);
+
+      return publicUrl;
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
+  Future<String> uploadMediaAccountPicture(
+      String storagePath, XFile file) async {
+    try {
+      final imageBytes = await file.readAsBytes();
+
+      await supabase.storage.from('account').uploadBinary(
+            storagePath,
+            imageBytes,
+            retryAttempts: 1,
+            fileOptions: FileOptions(
+              contentType: file.mimeType,
+            ),
+          );
+
+      final publicUrl =
+          supabase.storage.from('account').getPublicUrl(storagePath);
 
       return publicUrl;
     } catch (e) {

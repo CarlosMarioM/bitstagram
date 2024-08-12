@@ -1,4 +1,5 @@
 import 'package:bitstagram/provider/feed_provider.dart';
+import 'package:bitstagram/widgets/bit_circle_avatar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pixelarticons/pixel.dart';
@@ -43,7 +44,7 @@ class _WatchPageState extends State<WatchPage> {
   }
 }
 
-class FeedVideos extends StatelessWidget {
+class FeedVideos extends StatefulWidget {
   const FeedVideos({
     super.key,
     required this.feeds,
@@ -52,16 +53,39 @@ class FeedVideos extends StatelessWidget {
   final List<FeedModel> feeds;
 
   @override
+  State<FeedVideos> createState() => _FeedVideosState();
+}
+
+class _FeedVideosState extends State<FeedVideos> {
+  List<FeedModel> listFeed = [];
+  @override
+  void initState() {
+    listFeed = widget.feeds;
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    setState(() {
+      listFeed = Provider.of<FeedProvider>(context).feed.feeds;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return PageView.builder(
         scrollDirection: Axis.vertical,
-        itemCount: feeds.length,
+        itemCount: Provider.of<FeedProvider>(context).feed.feeds.length,
         itemBuilder: (context, index) {
+          if (index == listFeed.length - 1) {
+            Provider.of<FeedProvider>(context, listen: false).loadMoreFeed();
+          }
           return SizedBox(
             height: MediaQuery.of(context).size.height,
             child: Stack(
               children: [
-                VideoWidget(url: feeds[index].videos[0].link),
+                VideoWidget(url: listFeed[index].videos[0].link),
                 Container(
                   padding: const EdgeInsets.all(10.0),
                   decoration: BoxDecoration(
@@ -87,37 +111,16 @@ class FeedVideos extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Container(
-                            height: 40.0,
-                            width: 40.0,
-                            decoration: BoxDecoration(
-                                border:
-                                    Border.all(width: 1.0, color: Colors.white),
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                    image: NetworkImage(feeds[index].image),
-                                    fit: BoxFit.cover)),
-                          ),
-                          const SizedBox(
-                            width: 5.0,
-                          ),
+                          BitCircleAvatar(image: listFeed[index].image),
+                          const SizedBox(width: 5.0),
                           Text(
-                            feeds[index].user.name,
+                            listFeed[index].user.name,
                             style: const TextStyle(
                                 fontSize: 16.0, color: Colors.white),
                           ),
-                          const SizedBox(
-                            width: 5.0,
-                          )
+                          const SizedBox(width: 5.0)
                         ],
                       ),
-                      const SizedBox(
-                        height: 12.0,
-                      ),
-                      Text(
-                        feeds[index].user.url,
-                        style: const TextStyle(color: Colors.white),
-                      )
                     ],
                   )),
                 ),

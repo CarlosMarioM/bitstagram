@@ -10,12 +10,12 @@ class PexelsRepository {
   final Dio _dio = Dio();
   var getFeed = '$mainUrl/videos/search';
 
-  Future<FeedResponse> loadFeed() async {
+  Future<FeedResponse> loadFeed(int page) async {
     var params = {
       "api_key": _apiKey,
       "language": "en-US",
-      "query": "food",
-      "page": 1,
+      "query": "food, nature, aesthethic, beach, music, dance",
+      "page": page,
       "size": "small",
       "orientation ": "portrait"
     };

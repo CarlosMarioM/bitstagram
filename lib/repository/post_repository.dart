@@ -42,6 +42,26 @@ class PostRepository with MySupaBase {
     return response.map<Post>((data) => Post.fromMap(data)).toList();
   }
 
+  Future<List<Post>> fetchMyPosts() async {
+    final response = await client
+        .from('posts')
+        .select()
+        .eq('user_id', supaAuth.currentUser.id!)
+        .order('created_at', ascending: false);
+
+    return response.map<Post>((data) => Post.fromMap(data)).toList();
+  }
+
+  Future<List<Post>> fetchFromPosts(String userId) async {
+    final response = await client
+        .from('posts')
+        .select()
+        .eq('id', userId)
+        .order('created_at', ascending: false);
+
+    return response.map<Post>((data) => Post.fromMap(data)).toList();
+  }
+
   Future<void> deletePost(String postId) async {
     try {
       final response = await client

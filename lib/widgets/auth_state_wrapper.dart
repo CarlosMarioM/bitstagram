@@ -1,3 +1,4 @@
+import 'package:bitstagram/views/account/update_account_page.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -20,7 +21,11 @@ class AuthStateWrapper extends StatelessWidget {
         if (snapshot.hasData) {
           if (snapshot.hasData && snapshot.data?.session != null) {
             if (snapshot.data!.event == AuthChangeEvent.signedIn) {
-              return const BottomBarPage();
+              if (supaAuth.currentUser.nickname == null) {
+                return const UpdateAccountPage();
+              } else {
+                return const BottomBarPage();
+              }
             }
           }
         }
