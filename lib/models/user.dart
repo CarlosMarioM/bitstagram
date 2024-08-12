@@ -32,4 +32,6 @@ class User {
       'created_At': createdAt
     };
   }
+
+  static final empty = User(email: "", password: "");
 }
