@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:bitstagram/provider/user_provider.dart';
 import 'package:bitstagram/supabase/supa_auth.dart';
+import 'package:bitstagram/widgets/bit_circle_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pixelarticons/pixel.dart';
@@ -14,18 +15,9 @@ import '../views/explore/explore_page.dart';
 const filledHeartURL = "assets/icons/filled_heart.png";
 const emptyHeartURL = "assets/icons/empty_heart_white.png";
 
-class BitPostComplete extends StatefulWidget {
+class BitPostComplete extends StatelessWidget {
   const BitPostComplete({super.key, required this.post});
   final Post post;
-  @override
-  State<BitPostComplete> createState() => _BitPostCompleteState();
-}
-
-class _BitPostCompleteState extends State<BitPostComplete> {
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,9 +33,9 @@ class _BitPostCompleteState extends State<BitPostComplete> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _UserHeadlineWidget(postId: widget.post.id),
-                BitPostImage(post: widget.post),
-                _ContentWidget(post: widget.post),
+                _UserHeadlineWidget(postId: post.id),
+                BitPostImage(post: post),
+                _ContentWidget(post: post),
               ],
             ),
           ),
@@ -60,19 +52,10 @@ class _UserHeadlineWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Container(
-          height: 55,
-          width: 55,
-          decoration: BoxDecoration(
-              color: Colors.black54,
-              border: Border.all(color: Colors.white, width: 4),
-              borderRadius: const BorderRadius.only(
-                  topRight: Radius.circular(25),
-                  bottomRight: Radius.circular(25))),
-          child: const Icon(
-            Pixel.user,
-            size: 30,
-          ),
+        BitCircleAvatar(
+          height: 50,
+          width: 50,
+          image: supaAuth.currentUser.photoUrl,
         ),
         const SizedBox(width: 8),
         Text(

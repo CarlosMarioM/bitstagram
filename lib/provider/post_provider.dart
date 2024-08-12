@@ -35,14 +35,10 @@ class PostProvider with ChangeNotifier {
   }
 
   Future<void> likePost(String postId) async {
-    try {
-      await _postRepository.likePost(postId);
-      await addLikeCounter(postId);
-      await getLikesPerPost(postId);
-      await likeByMe(postId);
-    } catch (e) {
-      print('Error liking post: $e');
-    }
+    await _postRepository.likePost(postId);
+    await addLikeCounter(postId);
+    await getLikesPerPost(postId);
+    await likeByMe(postId);
   }
 
   Future<void> dislikePost(String postId) async {
@@ -53,65 +49,68 @@ class PostProvider with ChangeNotifier {
   }
 
   Future<void> addLikeCounter(String postId) async {
-    try {
-      await _postRepository.addLikeCounter(postId);
-    } catch (e) {}
+    await _postRepository.addLikeCounter(postId);
   }
 
   Future<void> deleteLikeCounter(String postId) async {
-    try {
-      await _postRepository.deleteLikeCounter(postId);
-    } catch (e) {}
+    await _postRepository.deleteLikeCounter(postId);
   }
 
   Future<void> getLikesPerPost(String postId) async {
-    try {
-      final count = await _postRepository.getLikesPerPost(postId);
-      final index = _posts.indexWhere((element) => element.id == postId);
-      if (index != -1) {
-        Post updatedPost = _posts[index];
-        updatedPost.likesCount = count;
-        _posts[index] = updatedPost;
-      }
-      notifyListeners();
-    } catch (e) {}
+    final count = await _postRepository.getLikesPerPost(postId);
+    final index = _posts.indexWhere((element) => element.id == postId);
+    if (index != -1) {
+      Post updatedPost = _posts[index];
+      updatedPost.likesCount = count;
+      _posts[index] = updatedPost;
+    }
+    notifyListeners();
   }
 
   Future<void> createPost(
       String storagePath, XFile file, String content) async {
     String mediaUrl = '';
 
-    mediaUrl = await _mediaService.uploadMedia(storagePath, file);
+    mediaUrl = await _mediaService.uploadMediaPost(storagePath, file);
 
     final post = Post(
-      id: '', // Supabase will generate the ID automatically
+      id: '',
       userId: supaAuth.currentUser.id!,
       content: content,
-      mediaUrl: mediaUrl, // Add the media URL
-      mediaType: file.mimeType!, // Add the media type
+      mediaUrl: mediaUrl,
+      mediaType: file.mimeType!,
       createdAt: DateTime.now(),
     );
 
-    try {
-      final newPost = await _postRepository.createPost(post);
-      if (newPost != null) {
-        _posts.insert(0, newPost); // Add to the beginning of the list
-        notifyListeners();
-      }
-    } catch (e) {
-      print('Error creating post: $e');
+    final newPost = await _postRepository.createPost(post);
+    if (newPost != null) {
+      _posts.insert(0, newPost);
+      notifyListeners();
     }
   }
 
   Future<void> loadPosts() async {
-    try {
-      _posts = await _postRepository.fetchPosts();
-      for (Post post in _posts) {
-        await likeByMe(post.id);
-      }
-      notifyListeners();
-    } catch (e) {
-      print('Error loading posts: $e');
+    _posts = await _postRepository.fetchPosts();
+    for (Post post in _posts) {
+      await likeByMe(post.id);
     }
+    notifyListeners();
+  }
+
+  Future<bool> fetchMyPosts() async {
+    _posts = await _postRepository.fetchMyPosts();
+    for (Post post in _posts) {
+      await likeByMe(post.id);
+    }
+    notifyListeners();
+    return true;
+  }
+
+  Future<void> fetchFromPosts(String userId) async {
+    _posts = await _postRepository.fetchFromPosts(userId);
+    for (Post post in _posts) {
+      await likeByMe(post.id);
+    }
+    notifyListeners();
   }
 }

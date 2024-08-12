@@ -26,20 +26,14 @@ class _SharePageState extends State<SharePage> {
   Future<void> _pickImage() async {
     final (String, XFile)? response = await _mediaService.pickImage();
     if (response != null) {
-      try {
-        setState(() {
-          _memoryImage = kIsWeb
-              ? Image.network(response.$2.path)
-              : Image.asset(response.$2.path);
-          _selectedMedia = response.$2;
-          _mediaType = 'image';
-          _storagePath = response.$1;
-        });
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Center(child: Text('Photo uploaded!'))),
-        );
-      }
+      setState(() {
+        _memoryImage = kIsWeb
+            ? Image.network(response.$2.path)
+            : Image.asset(response.$2.path);
+        _selectedMedia = response.$2;
+        _mediaType = 'image';
+        _storagePath = response.$1;
+      });
     }
   }
 

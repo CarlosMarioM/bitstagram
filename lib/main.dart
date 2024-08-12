@@ -1,3 +1,5 @@
+import 'package:bitstagram/provider/explore_provider.dart';
+import 'package:bitstagram/provider/feed_provider.dart';
 import 'package:bitstagram/provider/post_provider.dart';
 import 'package:bitstagram/provider/user_provider.dart';
 import 'package:bitstagram/views/bottom_bar/bottom_bar_page.dart';
@@ -33,6 +35,12 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => PostProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => FeedProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ExploreProvider(),
         )
       ],
       child: MaterialApp(

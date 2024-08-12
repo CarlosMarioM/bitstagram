@@ -8,14 +8,16 @@ class UserRepository {
   Future<User?> createUser(
       {required User user, required Function(String) errorCallback}) async {
     try {
-      await supaAuth.signup(user.email, user.password);
       final userMap = await supaAuth.client
           .from('users')
           .insert({"email": user.email, "password": user.password})
           .select()
           .single();
 
-      return User.fromMap(userMap);
+      final _user = User.fromMap(userMap);
+      supaAuth.currentUser = _user;
+      await supaAuth.signup(user.email, user.password);
+      return _user;
     } on supa.PostgrestException catch (e) {
       errorCallback(e.message);
     } on supa.AuthApiException catch (e) {
@@ -35,7 +37,6 @@ class UserRepository {
       required String password,
       required Function(String) errorCallback}) async {
     try {
-      await supaAuth.login(email, password);
       final user = await supaAuth.client
           .from('users')
           .select()
@@ -43,6 +44,8 @@ class UserRepository {
           .eq("password", password)
           .single()
           .then((value) => User.fromMap(value));
+      supaAuth.currentUser = user;
+      await supaAuth.login(email, password);
       return user;
     } on supa.PostgrestException catch (e) {
       errorCallback(e.message);
@@ -61,6 +64,34 @@ class UserRepository {
       return user;
     } on supa.PostgrestException catch (e) {
       throw Exception(e.message);
+    }
+  }
+
+  Future<User?> updateUserInfo({
+    required String storagePath,
+    required String nickname,
+    String? phone,
+    String? photoUrl,
+  }) async {
+    try {
+      final response = await supaAuth.client
+          .from('users')
+          .update({
+            'nickname': nickname,
+            'phone': phone,
+            'photo_url': photoUrl,
+          })
+          .eq('id', supaAuth.currentUser.id!)
+          .select()
+          .maybeSingle();
+
+      if (response == null) {
+        throw Exception('Failed to update user info');
+      } else {
+        return User.fromMap(response);
+      }
+    } catch (e) {
+      print(e);
     }
   }
 }
