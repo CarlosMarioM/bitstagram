@@ -67,9 +67,13 @@ class _BottomBarPageState extends State<BottomBarPage>
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: index,
         enableFeedback: true,
-        onTap: (value) => setState(() {
-          index = value;
-        }),
+        onTap: (value) {
+          if (value != index) {
+            setState(() {
+              index = value;
+            });
+          }
+        },
         selectedLabelStyle: const TextStyle(color: Colors.white),
         unselectedLabelStyle: const TextStyle(color: Colors.white54),
         showUnselectedLabels: false,
