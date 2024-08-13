@@ -2,13 +2,19 @@ import 'package:bitstagram/views/watch/watch_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../provider/followers_provider.dart';
+import '../watch/feed/feed_error_widget.dart';
+import '../watch/feed/feed_loading_page.dart';
 
 enum FollowEnum { follower, following }
 
 class FollowersScreen extends StatelessWidget {
   final String userId;
   final FollowEnum followEnum;
-  const FollowersScreen({required this.userId, required this.followEnum});
+  const FollowersScreen({
+    super.key,
+    required this.userId,
+    required this.followEnum,
+  });
 
   @override
   Widget build(BuildContext context) {

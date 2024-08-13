@@ -1,45 +1,30 @@
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:bitstagram/views/account/update_account_page.dart';
 import 'package:bitstagram/provider/followers_provider.dart';
 import 'package:bitstagram/provider/post_provider.dart';
 import 'package:bitstagram/provider/user_provider.dart';
 import 'package:bitstagram/supabase/supa_auth.dart';
-import 'package:bitstagram/views/account/update_account_page.dart';
-import 'package:bitstagram/views/follow/follow_page.dart';
-import 'package:bitstagram/views/splash/loading_splash_page.dart';
-import 'package:bitstagram/views/watch/watch_page.dart';
 import 'package:bitstagram/widgets/appbart.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-
 import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
 
-import '../../models/follower.dart';
 import '../../models/user.dart';
 import '../../widgets/bit_circle_avatar.dart';
-import '../explore/explore_page.dart';
 
-class ProfileAccountPage extends StatefulWidget {
+class ProfileAccountPage extends StatelessWidget {
   const ProfileAccountPage({super.key, required this.user});
   final User user;
-
-  @override
-  State<ProfileAccountPage> createState() => _ProfileAccountPageState();
-}
-
-class _ProfileAccountPageState extends State<ProfileAccountPage> {
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: normalAppbar,
-      body: AccountPage(user: widget.user),
+      body: AccountPage(user: user),
     );
   }
 }
 
+// ignore: must_be_immutable
 class AccountPage extends StatefulWidget {
   AccountPage({super.key, this.user});
 
@@ -116,7 +101,6 @@ class _UserHeaderWidgetState extends State<UserHeaderWidget> {
   late UserProvider userProvider;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     userProvider = Provider.of<UserProvider>(context, listen: false);
     followProvider = Provider.of<FollowersProvider>(context, listen: false);
@@ -150,7 +134,6 @@ class _UserHeaderWidgetState extends State<UserHeaderWidget> {
                   ],
                 ),
                 const Spacer(),
-                const Spacer(),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -169,44 +152,51 @@ class _UserHeaderWidgetState extends State<UserHeaderWidget> {
                     )
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: OutlinedButton(
-                      onPressed: () {
-                        if (widget.user.id == supaAuth.currentUser.id) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const UpdateAccountPage(),
-                              ));
-                        } else {
-                          if (value.followedByMe) {
-                            value.unfollowUser(
-                              widget.user.id!,
-                              supaAuth.currentUser.id!,
-                            );
-                          } else {
-                            value.followUser(
-                                widget.user.id!, supaAuth.currentUser.id!);
-                          }
-                        }
-                      },
-                      child: widget.user.id == supaAuth.currentUser.id
-                          ? const Text("Change")
-                          : value.followedByMe
-                              ? const Text("Following")
-                              : const Text("Follow")),
+                const Spacer(),
+                Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: OutlinedButton(
+                          onPressed: () {
+                            if (widget.user.id == supaAuth.currentUser.id) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const UpdateAccountPage(),
+                                  ));
+                            } else {
+                              if (value.followedByMe) {
+                                value.unfollowUser(
+                                  widget.user.id!,
+                                  supaAuth.currentUser.id!,
+                                );
+                              } else {
+                                value.followUser(
+                                    widget.user.id!, supaAuth.currentUser.id!);
+                              }
+                            }
+                          },
+                          child: widget.user.id == supaAuth.currentUser.id
+                              ? const Text("Change")
+                              : value.followedByMe
+                                  ? const Text("Following")
+                                  : const Text("Follow")),
+                    ),
+                    if (supaAuth.currentUser.id == widget.user.id) ...{
+                      Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: OutlinedButton(
+                            onPressed: () {
+                              user.signOut();
+                            },
+                            child: const Text("Logout")),
+                      ),
+                    }
+                  ],
                 ),
-                if (supaAuth.currentUser.id == widget.user.id) ...{
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: OutlinedButton(
-                        onPressed: () {
-                          user.signOut();
-                        },
-                        child: const Text("Logout")),
-                  ),
-                }
+                const Spacer(),
               ],
             ),
           ),

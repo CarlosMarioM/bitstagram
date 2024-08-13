@@ -8,6 +8,8 @@ import 'package:video_player/video_player.dart';
 import '../../models/feed/feed_model.dart';
 import '../../models/feed/feed_response.dart';
 import '../../provider/post_provider.dart';
+import 'feed/feed_error_widget.dart';
+import 'feed/feed_loading_page.dart';
 
 class WatchPage extends StatefulWidget {
   const WatchPage({Key? key}) : super(key: key);
@@ -191,9 +193,7 @@ class _FeedVideosState extends State<FeedVideos> {
                           ),
                         ),
                       ),
-                      const SizedBox(
-                        height: 80.0,
-                      ),
+                      const SizedBox(height: 80.0),
                     ],
                   ),
                 )
@@ -203,55 +203,6 @@ class _FeedVideosState extends State<FeedVideos> {
         },
       );
     });
-  }
-}
-
-class FeedErrorWidget extends StatelessWidget {
-  const FeedErrorWidget({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return const Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        SizedBox(
-          height: 140.0,
-          width: 140.0,
-          child: Icon(Icons.warning),
-        ),
-        SizedBox(
-          height: 25.0,
-        ),
-        Text(
-          "Something went wrong",
-          style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold),
-        ),
-      ],
-    );
-  }
-}
-
-class FeedLoadingWidget extends StatelessWidget {
-  const FeedLoadingWidget({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-        child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SizedBox(
-          height: 25.0,
-          width: 25.0,
-          child: CupertinoActivityIndicator(),
-        )
-      ],
-    ));
   }
 }
 

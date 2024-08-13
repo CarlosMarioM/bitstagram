@@ -196,14 +196,21 @@ class BitPostImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       flex: 4,
-      child: Image.network(
-        post.mediaUrl,
-        cacheHeight: 650,
-        cacheWidth: 650,
-        fit: BoxFit.fitWidth,
-        filterQuality: FilterQuality.high,
-        scale: 4,
-        repeat: ImageRepeat.noRepeat,
+      child: InkWell(
+        onDoubleTap: () => post.likedByMe
+            ? Provider.of<PostProvider>(context, listen: false)
+                .dislikePost(post.id)
+            : Provider.of<PostProvider>(context, listen: false)
+                .likePost(post.id),
+        child: Image.network(
+          post.mediaUrl,
+          cacheHeight: 650,
+          cacheWidth: 650,
+          fit: BoxFit.fitWidth,
+          filterQuality: FilterQuality.high,
+          scale: 4,
+          repeat: ImageRepeat.noRepeat,
+        ),
       ),
     );
   }
