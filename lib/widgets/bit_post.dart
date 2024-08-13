@@ -76,8 +76,11 @@ class _UserHeadlineWidget extends StatelessWidget {
   const _UserHeadlineWidget({required this.postId, required this.user});
   final String postId;
   final User user;
+
   @override
   Widget build(BuildContext context) {
+    final PostProvider postProvider =
+        Provider.of<PostProvider>(context, listen: false);
     return Row(
       children: [
         InkWell(
@@ -89,14 +92,16 @@ class _UserHeadlineWidget extends StatelessWidget {
                   ),
                 )
                 .then(
-                  (_) => Provider.of<PostProvider>(context, listen: false)
-                      .loadPosts(),
+                  (_) => postProvider.loadPosts(),
                 );
           },
-          child: BitCircleAvatar(
-            height: 50,
-            width: 50,
-            image: user.photoUrl,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: BitCircleAvatar(
+              height: 50,
+              width: 50,
+              image: user.photoUrl,
+            ),
           ),
         ),
         const SizedBox(width: 8),

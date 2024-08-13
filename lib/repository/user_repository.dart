@@ -70,28 +70,22 @@ class UserRepository {
   Future<User?> updateUserInfo({
     required String storagePath,
     required String nickname,
-    String? phone,
     String? photoUrl,
   }) async {
-    try {
-      final response = await supaAuth.client
-          .from('users')
-          .update({
-            'nickname': nickname,
-            'phone': phone,
-            'photo_url': photoUrl,
-          })
-          .eq('id', supaAuth.currentUser.id!)
-          .select()
-          .maybeSingle();
+    final response = await supaAuth.client
+        .from('users')
+        .update({
+          'nickname': nickname,
+          'photo_url': photoUrl,
+        })
+        .eq('id', supaAuth.currentUser.id!)
+        .select()
+        .maybeSingle();
 
-      if (response == null) {
-        throw Exception('Failed to update user info');
-      } else {
-        return User.fromMap(response);
-      }
-    } catch (e) {
-      print(e);
+    if (response == null) {
+      throw Exception('Failed to update user info');
+    } else {
+      return User.fromMap(response);
     }
   }
 }

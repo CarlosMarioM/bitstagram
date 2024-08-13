@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:bitstagram/supabase/media_service.dart';
 import 'package:bitstagram/supabase/supa_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' as supa;
 
 import '../models/user.dart';
 import '../repository/user_repository.dart';
@@ -50,10 +53,9 @@ class UserProvider with ChangeNotifier {
     }
   }
 
-  Future<void> updateUserInfo({
+  Future<String?> updateUserInfo({
     required String storagePath,
     required String nickname,
-    String? phone,
     required XFile file,
   }) async {
     try {
@@ -62,14 +64,15 @@ class UserProvider with ChangeNotifier {
       final user = await _userRepository.updateUserInfo(
         storagePath: storagePath,
         nickname: nickname,
-        phone: phone,
         photoUrl: photoUrl,
       );
       _user = user;
       supaAuth.currentUser = _user ?? User.empty;
       notifyListeners();
-    } catch (e) {
-      print('Error updating user info: $e');
+      return null;
+    } on supa.PostgrestException catch (e) {
+      final message = jsonDecode(e.message);
+      return message["message"];
     }
   }
 
