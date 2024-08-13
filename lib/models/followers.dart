@@ -6,25 +6,25 @@ class Follower {
 
   Follower({
     required this.id,
-    required this.followeeId,
     required this.followerId,
+    required this.followeeId,
     required this.createdAt,
   });
 
-  factory Follower.fromMap(Map<String, dynamic> map) {
+  factory Follower.fromJson(Map<String, dynamic> json) {
     return Follower(
-      id: map['id'],
-      followeeId: map['followee_id'],
-      followerId: map['follower_id'],
-      createdAt: DateTime.parse(map['created_at']),
+      id: json['id'],
+      followerId: json['follower_id'],
+      followeeId: json['followee_id'],
+      createdAt: DateTime.parse(json['created_at']),
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'followee_id': followeeId,
       'follower_id': followerId,
+      'followee_id': followeeId,
       'created_at': createdAt.toIso8601String(),
     };
   }

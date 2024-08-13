@@ -17,11 +17,23 @@ class BottomBarPage extends StatefulWidget {
   State<BottomBarPage> createState() => _BottomBarPageState();
 }
 
-class _BottomBarPageState extends State<BottomBarPage> {
+class _BottomBarPageState extends State<BottomBarPage>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
   int index = 0;
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context);
     List<Widget> widgets = [
       const HomePage(),
       const ExplorePage(),

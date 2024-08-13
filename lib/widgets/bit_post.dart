@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:bitstagram/provider/user_provider.dart';
 import 'package:bitstagram/supabase/supa_auth.dart';
+import 'package:bitstagram/views/account/account_page.dart';
 import 'package:bitstagram/widgets/bit_circle_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -16,47 +17,56 @@ import '../views/explore/explore_page.dart';
 const filledHeartURL = "assets/icons/filled_heart.png";
 const emptyHeartURL = "assets/icons/empty_heart_white.png";
 
-class BitPostComplete extends StatelessWidget {
-  const BitPostComplete({
-    super.key,
-    required this.post,
-  });
+class BitPostComplete extends StatefulWidget {
+  const BitPostComplete({super.key, required this.post});
   final Post post;
 
   @override
+  State<BitPostComplete> createState() => _BitPostCompleteState();
+}
+
+class _BitPostCompleteState extends State<BitPostComplete> {
+  late UserProvider userProvider;
+  @override
+  void initState() {
+    super.initState();
+    userProvider = Provider.of<UserProvider>(context, listen: false);
+  }
+
+  @override
+  void didChangeDependencies() {
+    userProvider.fetchUserById(widget.post.userId, widget.post.id);
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: Provider.of<UserProvider>(context, listen: false)
-          .fetchUserById(post.userId),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Center(
-              child: SizedBox(
-                height: 700,
-                width: 600,
-                child: Card(
-                  margin: const EdgeInsets.all(0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      _UserHeadlineWidget(
-                        postId: post.id,
-                        user: snapshot.data!,
-                      ),
-                      BitPostImage(post: post),
-                      _ContentWidget(post: post),
-                    ],
-                  ),
+    return Consumer(
+      builder: (context, UserProvider value, child) {
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Center(
+            child: SizedBox(
+              height: 700,
+              width: 600,
+              child: Card(
+                margin: const EdgeInsets.all(0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _UserHeadlineWidget(
+                      postId: widget.post.id,
+                      user: value.users[widget.post.id] ?? User.empty,
+                    ),
+                    BitPostImage(post: widget.post),
+                    _ContentWidget(post: widget.post),
+                  ],
                 ),
               ),
             ),
-          );
-        } else {
-          return const SizedBox();
-        }
+          ),
+        );
       },
     );
   }
@@ -70,10 +80,24 @@ class _UserHeadlineWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        BitCircleAvatar(
-          height: 50,
-          width: 50,
-          image: user.photoUrl,
+        InkWell(
+          onTap: () async {
+            await Navigator.of(context)
+                .push(
+                  MaterialPageRoute(
+                    builder: (context) => ProfileAccountPage(user: user),
+                  ),
+                )
+                .then(
+                  (_) => Provider.of<PostProvider>(context, listen: false)
+                      .loadPosts(),
+                );
+          },
+          child: BitCircleAvatar(
+            height: 50,
+            width: 50,
+            image: user.photoUrl,
+          ),
         ),
         const SizedBox(width: 8),
         Text(
@@ -81,7 +105,18 @@ class _UserHeadlineWidget extends StatelessWidget {
           style: Theme.of(context).textTheme.labelMedium,
         ),
         const Spacer(),
-        
+        PopupMenuButton(
+          tooltip: "Options",
+          itemBuilder: (context) {
+            return [
+              if (user.id! == supaAuth.currentUser.id!) ...{
+                PopupMenuItem(
+                  child: Center(child: DeletePostButton(postId: postId)),
+                )
+              }
+            ];
+          },
+        ),
         const SizedBox(width: 16),
       ],
     );

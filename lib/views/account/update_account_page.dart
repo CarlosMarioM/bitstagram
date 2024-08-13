@@ -39,6 +39,7 @@ class _UpdateAccountPageState extends State<UpdateAccountPage> {
 
     return Scaffold(
       appBar: normalAppbar,
+      resizeToAvoidBottomInset: false,
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),

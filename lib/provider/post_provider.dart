@@ -106,11 +106,12 @@ class PostProvider with ChangeNotifier {
     return true;
   }
 
-  Future<void> fetchFromPosts(String userId) async {
+  Future<bool> fetchFromPosts(String userId) async {
     _posts = await _postRepository.fetchFromPosts(userId);
     for (Post post in _posts) {
       await likeByMe(post.id);
     }
     notifyListeners();
+    return true;
   }
 }
