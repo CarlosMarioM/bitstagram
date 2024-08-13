@@ -36,7 +36,7 @@ class _BottomBarPageState extends State<BottomBarPage>
   Widget build(BuildContext context) {
     List<Widget> widgets = [
       const HomePage(),
-      const ExplorePage(),
+      //const ExplorePage(),
       const SharePage(),
       const WatchPage(),
       AccountPage()
@@ -73,7 +73,7 @@ class _BottomBarPageState extends State<BottomBarPage>
         selectedLabelStyle: const TextStyle(color: Colors.white),
         unselectedLabelStyle: const TextStyle(color: Colors.white54),
         showUnselectedLabels: false,
-        showSelectedLabels: true,
+        showSelectedLabels: false,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(
@@ -84,15 +84,15 @@ class _BottomBarPageState extends State<BottomBarPage>
             label: "HOME",
             tooltip: "Home",
           ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.search,
-              size: 30,
-              color: Colors.white,
-            ),
-            label: "EXPLORE",
-            tooltip: "Explore",
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(
+          //     Icons.search,
+          //     size: 30,
+          //     color: Colors.white,
+          //   ),
+          //   label: "EXPLORE",
+          //   tooltip: "Explore",
+          // ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.add_circle_outline_sharp,

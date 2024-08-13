@@ -17,7 +17,7 @@ class MediaService {
       );
       if (pickedFile != null) {
         final storagePath =
-            "${supaAuth.currentUser.id}/${DateTime.now().millisecondsSinceEpoch}";
+            "${supaAuth.currentUser.id}/${DateTime.now().millisecondsSinceEpoch} ${pickedFile.name}";
 
         return (storagePath, pickedFile);
       }

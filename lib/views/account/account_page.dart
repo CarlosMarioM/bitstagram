@@ -1,5 +1,6 @@
 import 'package:bitstagram/provider/followers_provider.dart';
 import 'package:bitstagram/provider/post_provider.dart';
+import 'package:bitstagram/provider/user_provider.dart';
 import 'package:bitstagram/supabase/supa_auth.dart';
 import 'package:bitstagram/views/account/update_account_page.dart';
 import 'package:bitstagram/views/follow/follow_page.dart';
@@ -112,10 +113,12 @@ class UserHeaderWidget extends StatefulWidget {
 
 class _UserHeaderWidgetState extends State<UserHeaderWidget> {
   late FollowersProvider followProvider;
+  late UserProvider userProvider;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    userProvider = Provider.of<UserProvider>(context, listen: false);
     followProvider = Provider.of<FollowersProvider>(context, listen: false);
     followProvider.checkFollowedByMe(widget.user.id!);
     followProvider.fetchFollowers(widget.user.id!);
@@ -124,8 +127,8 @@ class _UserHeaderWidgetState extends State<UserHeaderWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(
-      builder: (context, FollowersProvider value, child) {
+    return Consumer2(
+      builder: (context, FollowersProvider value, UserProvider user, child) {
         return ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 600, minWidth: 400),
           child: Padding(
@@ -141,13 +144,31 @@ class _UserHeaderWidgetState extends State<UserHeaderWidget> {
                     BitCircleAvatar(
                         height: 70, width: 70, image: widget.user.photoUrl),
                     const SizedBox(height: 26),
-                    Text(
-                      widget.user.nickname ?? "User",
-                      textAlign: TextAlign.center,
-                    ),
+                    Text(widget.user.nickname ?? "User",
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.labelMedium),
                   ],
                 ),
                 const Spacer(),
+                const Spacer(),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 16),
+                    Text(
+                      "Following ${value.followeeCount}",
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.labelMedium,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      "Followers ${value.followersCount}",
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.labelMedium,
+                    )
+                  ],
+                ),
                 Padding(
                   padding: const EdgeInsets.all(16),
                   child: OutlinedButton(
@@ -176,25 +197,16 @@ class _UserHeaderWidgetState extends State<UserHeaderWidget> {
                               ? const Text("Following")
                               : const Text("Follow")),
                 ),
-                const Spacer(),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 16),
-                    Text(
-                      "Following ${value.followeeCount}",
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.labelMedium,
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      "Followers ${value.followersCount}",
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.labelMedium,
-                    )
-                  ],
-                )
+                if (supaAuth.currentUser.id == widget.user.id) ...{
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: OutlinedButton(
+                        onPressed: () {
+                          user.signOut();
+                        },
+                        child: const Text("Logout")),
+                  ),
+                }
               ],
             ),
           ),

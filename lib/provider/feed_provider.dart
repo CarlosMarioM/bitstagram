@@ -11,16 +11,16 @@ class FeedProvider with ChangeNotifier {
   FeedResponse get feed => _feed;
   int _page = 1;
   int get page => _page;
-  Future<FeedResponse> loadMoreFeed() async {
+  Future<FeedResponse> loadMoreFeed({String topic = "food"}) async {
     _page += 1;
-    final newFeed = await _pexelsRepository.loadFeed(page);
+    final newFeed = await _pexelsRepository.loadFeed(page, topic: topic);
     _feed.feeds.addAll(newFeed.feeds);
     notifyListeners();
     return _feed;
   }
 
-  Future<FeedResponse> loadFeed() async {
-    _feed = await _pexelsRepository.loadFeed(1);
+  Future<FeedResponse> loadFeed({String topic = "food"}) async {
+    _feed = await _pexelsRepository.loadFeed(1, topic: topic);
     notifyListeners();
     return _feed;
   }
