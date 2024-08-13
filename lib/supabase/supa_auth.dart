@@ -10,7 +10,7 @@ class SupaAuth extends MySupaBase {
   SupaAuth._() {
     authChanges;
   }
-  late final User currentUser;
+  User currentUser = User.empty;
 
   StreamController<supa.AuthState> authController =
       StreamController.broadcast();
@@ -41,10 +41,12 @@ class SupaAuth extends MySupaBase {
           .eq("password", password)
           .single();
 
-      print(map);
       final user = User.fromMap(map);
       currentUser = User(
           id: user.id,
+          nickname: user.nickname,
+          photoUrl: user.photoUrl,
+          phone: user.phone,
           email: response.user!.email!,
           password: password,
           createdAt: DateTime.parse(response.user!.createdAt));

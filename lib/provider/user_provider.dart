@@ -13,6 +13,9 @@ class UserProvider with ChangeNotifier {
 
   User? get user => _user;
 
+  Map<String, User> _users = {};
+  Map<String, User> get users => _users;
+
   Future<void> createUser(
       {required User user, required Function(String) errorCallback}) async {
     _user = await _userRepository.createUser(
@@ -36,14 +39,14 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<User> fetchUserById(String id) async {
-    _user = await _userRepository.getUserById(id);
-
-    notifyListeners();
-    if (_user == null) {
+  Future<User> fetchUserById(String id, String postId) async {
+    final user = await _userRepository.getUserById(id);
+    if (user == null) {
       return User.empty;
     } else {
-      return _user!;
+      users[postId] = user;
+      notifyListeners();
+      return user;
     }
   }
 
@@ -63,6 +66,7 @@ class UserProvider with ChangeNotifier {
         photoUrl: photoUrl,
       );
       _user = user;
+      supaAuth.currentUser = _user ?? User.empty;
       notifyListeners();
     } catch (e) {
       print('Error updating user info: $e');
