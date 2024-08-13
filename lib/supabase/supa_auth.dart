@@ -34,7 +34,7 @@ class SupaAuth extends MySupaBase {
       password: password,
     );
     try {
-      final map = await supaAuth.client
+      final map = await client
           .from('users')
           .select()
           .eq("email", email)
@@ -52,7 +52,6 @@ class SupaAuth extends MySupaBase {
           createdAt: DateTime.parse(response.user!.createdAt));
       return response;
     } catch (e) {
-      print(e);
       return supa.AuthResponse(session: null, user: null);
     }
   }
