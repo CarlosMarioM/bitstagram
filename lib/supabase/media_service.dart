@@ -1,12 +1,11 @@
-import 'dart:io';
-import 'package:flutter/foundation.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:bitstagram/supabase/supa_auth.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:bitstagram/supabase/my_supabase.dart';
+import 'package:bitstagram/supabase/supa_auth.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
-class MediaService {
+class MediaService with MySupaBase {
   final ImagePicker _picker = ImagePicker();
-  final SupabaseClient supabase = Supabase.instance.client;
 
   Future<(String, XFile)?> pickImage() async {
     try {
@@ -17,13 +16,14 @@ class MediaService {
       );
       if (pickedFile != null) {
         final storagePath =
-            "${supaAuth.currentUser.id}/${DateTime.now().millisecondsSinceEpoch}";
+            "${supaAuth.currentUser.id}/${DateTime.now().millisecondsSinceEpoch} ${pickedFile.name}";
 
         return (storagePath, pickedFile);
       }
     } catch (e) {
       print(e);
     }
+    return null;
   }
 
   Future<File?> pickVideo() async {
@@ -35,7 +35,7 @@ class MediaService {
     try {
       final imageBytes = await file.readAsBytes();
 
-      await supabase.storage.from('posts').uploadBinary(
+      await client.storage.from('posts').uploadBinary(
             storagePath,
             imageBytes,
             retryAttempts: 1,
@@ -44,8 +44,7 @@ class MediaService {
             ),
           );
 
-      final publicUrl =
-          supabase.storage.from('posts').getPublicUrl(storagePath);
+      final publicUrl = client.storage.from('posts').getPublicUrl(storagePath);
 
       return publicUrl;
     } catch (e) {
@@ -58,7 +57,7 @@ class MediaService {
     try {
       final imageBytes = await file.readAsBytes();
 
-      await supabase.storage.from('account').uploadBinary(
+      await client.storage.from('account').uploadBinary(
             storagePath,
             imageBytes,
             retryAttempts: 1,
@@ -68,7 +67,7 @@ class MediaService {
           );
 
       final publicUrl =
-          supabase.storage.from('account').getPublicUrl(storagePath);
+          client.storage.from('account').getPublicUrl(storagePath);
 
       return publicUrl;
     } catch (e) {

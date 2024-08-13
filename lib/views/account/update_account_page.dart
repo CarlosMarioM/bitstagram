@@ -15,20 +15,18 @@ class UpdateAccountPage extends StatefulWidget {
 }
 
 class _UpdateAccountPageState extends State<UpdateAccountPage> {
-  late final TextEditingController _nicknameController, _phoneController;
+  late final TextEditingController _nicknameController;
   String? _photoUrl, _storagePath;
   XFile? _selectedMedia;
   @override
   void initState() {
     super.initState();
     _nicknameController = TextEditingController();
-    _phoneController = TextEditingController();
   }
 
   @override
   void dispose() {
     _nicknameController.dispose();
-    _phoneController.dispose();
     super.dispose();
   }
 
@@ -39,6 +37,7 @@ class _UpdateAccountPageState extends State<UpdateAccountPage> {
 
     return Scaffold(
       appBar: normalAppbar,
+      resizeToAvoidBottomInset: false,
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -64,9 +63,6 @@ class _UpdateAccountPageState extends State<UpdateAccountPage> {
                       _selectedMedia = response.$2;
                     });
                   }
-
-                  // final photoUrl =
-                  //     await MediaService.pickImage(); // Handle photo selection
                 },
                 child: const Text('Change Photo'),
               ),
@@ -78,29 +74,44 @@ class _UpdateAccountPageState extends State<UpdateAccountPage> {
                   decoration: const InputDecoration(labelText: 'Nickname'),
                 ),
               ),
-              const SizedBox(height: 26),
-              SizedBox(
-                width: 450,
-                child: TextField(
-                  controller: _phoneController,
-                  decoration: const InputDecoration(labelText: 'Phone'),
-                ),
-              ),
               const Spacer(),
               SizedBox(
                 width: 400,
+                height: 60,
                 child: OutlinedButton(
                   onPressed: () async {
-                    if (user != null) {
-                      await userProvider
-                          .updateUserInfo(
-                            storagePath: _storagePath!,
-                            nickname: _nicknameController.text,
-                            phone: _phoneController.text,
-                            file: _selectedMedia!,
-                          )
-                          .then((value) => Navigator.of(context)
-                              .pushReplacementNamed(BottomBarPage.route));
+                    if (_selectedMedia != null &&
+                        _storagePath != null &&
+                        _nicknameController.text.isNotEmpty) {
+                      if (user != null) {
+                        final response = await userProvider.updateUserInfo(
+                          storagePath: _storagePath!,
+                          nickname: _nicknameController.text,
+                          file: _selectedMedia!,
+                        );
+                        if (response == null) {
+                          setState(() {
+                            _nicknameController.text = "";
+                            _photoUrl = null;
+                            _selectedMedia = null;
+                          });
+                          WidgetsBinding.instance.addPostFrameCallback(
+                            (_) => Navigator.of(context)
+                                .pushReplacementNamed(BottomBarPage.route),
+                          );
+                        } else {
+                          WidgetsBinding.instance.addPostFrameCallback(
+                            (_) => ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(response),
+                              ),
+                            ),
+                          );
+                        }
+                      }
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text("Need to put all the data")));
                     }
                   },
                   child: const Text('Update'),

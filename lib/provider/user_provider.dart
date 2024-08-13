@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:bitstagram/supabase/media_service.dart';
 import 'package:bitstagram/supabase/supa_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' as supa;
 
 import '../models/user.dart';
 import '../repository/user_repository.dart';
@@ -12,6 +15,9 @@ class UserProvider with ChangeNotifier {
   User? _user;
 
   User? get user => _user;
+
+  Map<String, User> _users = {};
+  Map<String, User> get users => _users;
 
   Future<void> createUser(
       {required User user, required Function(String) errorCallback}) async {
@@ -36,15 +42,20 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> fetchUserById(String id) async {
-    _user = await _userRepository.getUserById(id);
-    notifyListeners();
+  Future<User> fetchUserById(String id, String postId) async {
+    final user = await _userRepository.getUserById(id);
+    if (user == null) {
+      return User.empty;
+    } else {
+      users[postId] = user;
+      notifyListeners();
+      return user;
+    }
   }
 
-  Future<void> updateUserInfo({
+  Future<String?> updateUserInfo({
     required String storagePath,
     required String nickname,
-    String? phone,
     required XFile file,
   }) async {
     try {
@@ -53,13 +64,15 @@ class UserProvider with ChangeNotifier {
       final user = await _userRepository.updateUserInfo(
         storagePath: storagePath,
         nickname: nickname,
-        phone: phone,
         photoUrl: photoUrl,
       );
       _user = user;
+      supaAuth.currentUser = _user ?? User.empty;
       notifyListeners();
-    } catch (e) {
-      print('Error updating user info: $e');
+      return null;
+    } on supa.PostgrestException catch (e) {
+      final message = jsonDecode(e.message);
+      return message["message"];
     }
   }
 

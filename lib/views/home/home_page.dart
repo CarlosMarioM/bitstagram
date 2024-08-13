@@ -11,31 +11,42 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late PostProvider postProvider;
   @override
   void initState() {
     super.initState();
+    postProvider = Provider.of<PostProvider>(context, listen: false);
+  }
+
+  @override
+  void didChangeDependencies() {
+    postProvider.loadPosts();
+    super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: Provider.of<PostProvider>(context, listen: false).loadPosts(),
-        builder: (context, snapshot) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Center(
-              child: SizedBox(
-                width: double.infinity,
-                height: double.infinity,
-                child: ListView.builder(
-                  itemCount: Provider.of<PostProvider>(context).posts.length,
-                  itemBuilder: (context, index) => BitPostComplete(
-                    post: Provider.of<PostProvider>(context).posts[index],
-                  ),
+    return Consumer(
+      builder: (context, PostProvider value, child) {
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Center(
+            child: SizedBox(
+              width: double.infinity,
+              height: double.infinity,
+              child: ListView.builder(
+                addAutomaticKeepAlives: true,
+                semanticChildCount: value.posts.length,
+                controller: ScrollController(),
+                itemCount: value.posts.length,
+                itemBuilder: (context, index) => BitPostComplete(
+                  post: value.posts[index],
                 ),
               ),
             ),
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 }

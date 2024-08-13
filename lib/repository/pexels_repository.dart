@@ -16,7 +16,7 @@ class PexelsRepository {
     var params = {
       "api_key": _apiKey,
       "language": "en-US",
-      "query": "background",
+      "query": "art",
       "page": page,
       "size": "small",
       "orientation ": "portrait",
@@ -26,7 +26,6 @@ class PexelsRepository {
       _dio.interceptors
           .add(InterceptorsWrapper(onRequest: (options, handler) async {
         options.headers["Authorization"] = _apiKey;
-        //     _dio.interceptors.requestLock.unlock();
 
         return handler.next(options);
       }));
@@ -38,11 +37,11 @@ class PexelsRepository {
     }
   }
 
-  Future<FeedResponse> loadFeed(int page) async {
+  Future<FeedResponse> loadFeed(int page, {String topic = "food"}) async {
     var params = {
       "api_key": _apiKey,
       "language": "en-US",
-      "query": "food, nature, aesthethic, beach, music, dance",
+      "query": topic,
       "page": page,
       "size": "small",
       "orientation ": "portrait"
@@ -51,7 +50,6 @@ class PexelsRepository {
       _dio.interceptors
           .add(InterceptorsWrapper(onRequest: (options, handler) async {
         options.headers["Authorization"] = _apiKey;
-        //     _dio.interceptors.requestLock.unlock();
 
         return handler.next(options);
       }));

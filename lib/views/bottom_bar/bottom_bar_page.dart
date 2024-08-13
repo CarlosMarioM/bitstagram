@@ -5,7 +5,6 @@ import 'package:bitstagram/views/share/share_page.dart';
 import 'package:bitstagram/views/watch/watch_page.dart';
 import 'package:bitstagram/widgets/appbart.dart';
 import 'package:flutter/material.dart';
-import 'package:pixelarticons/pixel.dart';
 import 'package:provider/provider.dart';
 
 import '../explore/explore_page.dart';
@@ -18,14 +17,26 @@ class BottomBarPage extends StatefulWidget {
   State<BottomBarPage> createState() => _BottomBarPageState();
 }
 
-class _BottomBarPageState extends State<BottomBarPage> {
+class _BottomBarPageState extends State<BottomBarPage>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
   int index = 0;
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context);
     List<Widget> widgets = [
       const HomePage(),
-      const ExplorePage(),
+      //const ExplorePage(),
       const SharePage(),
       const WatchPage(),
       AccountPage()
@@ -56,35 +67,39 @@ class _BottomBarPageState extends State<BottomBarPage> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: index,
         enableFeedback: true,
-        onTap: (value) => setState(() {
-          index = value;
-        }),
+        onTap: (value) {
+          if (value != index) {
+            setState(() {
+              index = value;
+            });
+          }
+        },
         selectedLabelStyle: const TextStyle(color: Colors.white),
         unselectedLabelStyle: const TextStyle(color: Colors.white54),
         showUnselectedLabels: false,
-        showSelectedLabels: true,
+        showSelectedLabels: false,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(
-              Pixel.home,
+              Icons.home,
               size: 30,
               color: Colors.white,
             ),
             label: "HOME",
             tooltip: "Home",
           ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(
+          //     Icons.search,
+          //     size: 30,
+          //     color: Colors.white,
+          //   ),
+          //   label: "EXPLORE",
+          //   tooltip: "Explore",
+          // ),
           BottomNavigationBarItem(
             icon: Icon(
-              Pixel.search,
-              size: 30,
-              color: Colors.white,
-            ),
-            label: "EXPLORE",
-            tooltip: "Explore",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Pixel.imagenew,
+              Icons.add_circle_outline_sharp,
               size: 30,
               color: Colors.white,
             ),
@@ -93,7 +108,7 @@ class _BottomBarPageState extends State<BottomBarPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Pixel.shuffle,
+              Icons.shuffle,
               size: 30,
               color: Colors.white,
             ),
@@ -102,7 +117,7 @@ class _BottomBarPageState extends State<BottomBarPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Pixel.humanhandsup,
+              Icons.run_circle_outlined,
               size: 30,
               color: Colors.white,
             ),

@@ -1,5 +1,4 @@
 import 'package:bitstagram/supabase/supa_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supa;
 
 import '../models/user.dart';
@@ -14,6 +13,7 @@ class UserRepository {
           .select()
           .single();
 
+      // ignore: no_leading_underscores_for_local_identifiers
       final _user = User.fromMap(userMap);
       supaAuth.currentUser = _user;
       await supaAuth.signup(user.email, user.password);
@@ -52,6 +52,7 @@ class UserRepository {
     } on supa.AuthApiException catch (e) {
       errorCallback(e.message);
     }
+    return null;
   }
 
   Future<User?> getUserById(String id) async {
@@ -70,28 +71,22 @@ class UserRepository {
   Future<User?> updateUserInfo({
     required String storagePath,
     required String nickname,
-    String? phone,
     String? photoUrl,
   }) async {
-    try {
-      final response = await supaAuth.client
-          .from('users')
-          .update({
-            'nickname': nickname,
-            'phone': phone,
-            'photo_url': photoUrl,
-          })
-          .eq('id', supaAuth.currentUser.id!)
-          .select()
-          .maybeSingle();
+    final response = await supaAuth.client
+        .from('users')
+        .update({
+          'nickname': nickname,
+          'photo_url': photoUrl,
+        })
+        .eq('id', supaAuth.currentUser.id!)
+        .select()
+        .maybeSingle();
 
-      if (response == null) {
-        throw Exception('Failed to update user info');
-      } else {
-        return User.fromMap(response);
-      }
-    } catch (e) {
-      print(e);
+    if (response == null) {
+      throw Exception('Failed to update user info');
+    } else {
+      return User.fromMap(response);
     }
   }
 }

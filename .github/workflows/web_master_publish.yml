@@ -1,0 +1,22 @@
+name: Flutter Web CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          flutter-version: 3.10.6
+
+      - name: Run Makefile Command
+        run: make deploy OUTPUT=bitstagram

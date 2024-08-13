@@ -56,7 +56,7 @@ class PostRepository with MySupaBase {
     final response = await client
         .from('posts')
         .select()
-        .eq('id', userId)
+        .eq('user_id', userId)
         .order('created_at', ascending: false);
 
     return response.map<Post>((data) => Post.fromMap(data)).toList();
@@ -89,7 +89,7 @@ class PostRepository with MySupaBase {
           .eq('post_id', postId)
           .maybeSingle();
       if (likeMap != null) {
-        return Like.fromMap(likeMap!);
+        return Like.fromMap(likeMap);
       } else {
         return null;
       }
